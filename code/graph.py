@@ -8,6 +8,7 @@ import random
 import time
 import pylab
 import pandas as pd
+import json
 
 import heapq
  
@@ -18,14 +19,40 @@ class Graph:
         self.V = vertices
         self.graph = []
 
-        self.greedy_file = "../content/greedy_algorithm_{}.csv"
-        self.aprox_file = "../content/aprox_algorithm_{}.csv"
+        self.graph_file = "../content/graph.txt"
+        self.greedy_file = "../content/greedy_algorithm/process_graph_{}.csv"
+        self.aprox_file = "../content/aprox_algorithm/process_graph_{}.csv"
 
     def addEdge(self, u, v):
         edge = (u,v)
         self.graph.append(edge)
 
-                 
+    def import_graph_to_txt(self):
+        #clean file
+        clean = open(self.graph_file, "w")  
+        clean.truncate()
+        clean.close()
+
+        #Wite graphs
+        file = open(self.graph_file, "a")  
+
+        vertex = {}
+        for x,y in self.graph:
+            #Add all vertexs
+            if x not in vertex:
+                vertex[x] = []
+            if y not in vertex:
+                vertex[y] = []
+
+            if x not in vertex[y]:
+                vertex[y].append(x)
+            if y not in vertex[x]:
+                vertex[x].append(y)   
+        
+            file.write(str(vertex)+ "\n")
+        file.close() 
+    
+
 
     def print_graph(self, print_):
         if print_:
@@ -81,7 +108,7 @@ class Graph:
         
         return adjacency   
   
-
+    410
     def show_results(self, adjacency, stage, option, name):
         
         result = {'':[], 'vector':[],'neighbors':[], 'degree':[],'visited':[], 'option': []}
@@ -154,10 +181,10 @@ class Graph:
 
                 #Iniciar remoção dos termo atual no vértices associados
                 to_remove_list = adjacency[term]['neighbors']
-                print("para remover:"+str(list(to_remove_list)))
+
                 for x in to_remove_list:
                     #remover
-                    print("-->"+x)
+
                     adjacency[x]['neighbors'].remove(str(term))
 
                     #atualizar grau
@@ -168,6 +195,7 @@ class Graph:
                         adjacency[x]['visited'] = True
               
             count += 1
+
 
             result = {'':[], 'vector':[],'neighbors':[], 'degree':[],'visited':[], 'option': []}
             result[''].append('')
@@ -183,6 +211,8 @@ class Graph:
             result['degree'].append(final_result)
             result['visited'].append('')
             result['option'].append('')
+
+
         return final_result
    
 
@@ -243,39 +273,38 @@ class Graph:
         graph = self.adjacency_table1()
 
         queue: list[list] = []
-        print(queue)
+
 
         for key, value in graph.items():
             # O(log(n))
-            heapq.heappush(queue, [-1 * len(value), (key, value)])
-        print(queue)
+            heapq.heappush(queue, [len(value), (key, value)])
+
         # chosen_vertices = set of chosen vertices
         chosen_vertices = set()
 
-        print(chosen_vertices)
 
         # while queue isn't empty and there are still edges
         #   (queue[0][0] is the rank of the node with max rank)
         while queue and queue[0][0] != 0:
             # extract vertex with max rank from queue and add it to chosen_vertices
             argmax = heapq.heappop(queue)[1][0]
-            print("argmax="+str(argmax))
+            
             chosen_vertices.add(argmax)
-            print("chosen_vertices:"+str(chosen_vertices))
+            
             # Remove all arcs adjacent to argmax
             for elem in queue:
-                print("elem="+str(elem))
-                print("elem[0] = "+ str(elem[0]))
+                
                 # if v haven't adjacent node, skip
                 if elem[0] == 0:
                     continue
                 # if argmax is reachable from elem
                 # remove argmax from elem's adjacent list and update his rank
+                
                 if argmax in elem[1][1]:
-                    print(elem[1][1].index(argmax))
                     index = elem[1][1].index(argmax)
                     del elem[1][1][index]
-                    elem[0] += 1
+                    elem[0] -= 1
+           
             # re-order the queue
             heapq.heapify(queue)
         return chosen_vertices
