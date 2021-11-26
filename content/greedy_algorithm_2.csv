@@ -1,5 +1,0 @@
-,vector,neighbors,degree,visited,option
-1st Stage,,,,,
-,5,"['4', '6']",2,False,X
-,6,['5'],1,False,
-,4,['5'],1,False,
