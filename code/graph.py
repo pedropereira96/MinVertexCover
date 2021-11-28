@@ -77,9 +77,9 @@ class Graph:
         
         return adjacency   
 
-    def greedy_algorithm_personal(self,name):
+    def greedy_algorithm(self,name):
         adjacency = self.adjacency_table()
-        
+       
         final_result = []
         #apenas corre os que ainda não foram visitados
         while False in tuple((adjacency[key]['visited']) for key in adjacency):
@@ -109,6 +109,7 @@ class Graph:
         
         return final_result
 
+
     def create_dictionary(self):
         matrix={}
         z=0
@@ -117,7 +118,7 @@ class Graph:
             z+=1
         return matrix
 
-    def aprox_algorithm_personal(self, name):
+    def aprox_algorithm(self, name):
 
         #Aprox vertex cover algorithm
         # C←∅
@@ -129,7 +130,6 @@ class Graph:
         
 
         E = self.create_dictionary()
-        
         C = []
         #Enquanto a matriz conter dados
         while E:

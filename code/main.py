@@ -16,9 +16,10 @@ class Main:
 
         self.greedy_times = []
         self.approx_times = []
-        
+
         self.approx_counts = []
         self.greedy_counts = []
+
 
 
 def random_graph(vertices_number: int) :
@@ -43,7 +44,7 @@ def process(m, nvertexs, graph,  approx, vertexs, greedy,  clean, extra_name="" 
 
     #write graph on txt file
     G.import_graph_to_txt(clean)
-    print("A")
+    
     #for x axis 
     vertexs.append(str(nvertexs)+str(extra_name))
 
@@ -58,34 +59,43 @@ def process(m, nvertexs, graph,  approx, vertexs, greedy,  clean, extra_name="" 
     #Greedy Algorithm
     print("Greedy Algorithm:")
     tic = time.time() #Iniciar tempo
-    greedy = G.greedy_algorithm_personal(nvertexs) #Excutar 
-    m.greedy_times.append(time.time() - tic) #Adicionar tempo
+    greedy = G.greedy_algorithm(nvertexs) #Excutar 
+    time_value = time.time() - tic
+    m.greedy_times.append(time_value) #Adicionar tempo
     m.greedy_results[str(nvertexs) + str(extra_name)] = greedy #adicionar resultado à class main
     m.greedy_counts.append(len(greedy))
     print(greedy)
+    print("Execution Time: " + str(time_value))
 
     print("")
 
     #Aprox Algorithm
     print("Aprox Algorithm:")
     tic = time.time() #Iniciar tempo
-    aprox = G.aprox_algorithm_personal(nvertexs) #Excutar 
-    m.approx_times.append(time.time() - tic )#Adicionar tempo
+    aprox = G.aprox_algorithm(nvertexs) #Excutar 
+    time_value = time.time() - tic 
+    m.approx_times.append(time_value)#Adicionar tempo
     m.approx_results[str(nvertexs) + str(extra_name)] = aprox #adicionar resultado à class main
     m.approx_counts.append(len(aprox))
     print(aprox)
+    print("Execution Time: " + str(time_value))
+
+
+    print("")
 
 def create_times_graph(m, min, max):
     # x-coordinates of left sides of bars
     bar_width = 0.3
     r1 = [ x for x in range(min, max)]
     r2 = [x + bar_width for x in r1]
+
     
     plt.figure(figsize=(15,7))
 
     # plotting a bar chart
-    plt.bar(r1, m.approx_times,  width = bar_width, color = '#6A5ACD', tick_label="Approx Min Vertex Cover")
-    plt.bar(r2, m.greedy_times,  width = bar_width, color = '#6495ED', tick_label="Greedy Algorithm")
+    plt.bar(r1, m.approx_times,  width = bar_width, color = '#054A91', tick_label="Approx Min Vertex Cover")
+    plt.bar(r2, m.greedy_times,  width = bar_width, color = '#3E7CB1', tick_label="Greedy Algorithm")
+
     # naming the x-axis
     plt.xlabel('n Vertexs')
     plt.xticks([r + bar_width for r in range(min, max)],[str(r) for r in range(min, max)])
@@ -96,7 +106,8 @@ def create_times_graph(m, min, max):
     
     # function to show the plot
     plt.legend(('Approx Min Vertex Cover','Greedy Algorithm'))
-    plt.show()
+    plt.savefig("content/times_graphics.png")
+    #plt.show()
     plt.close()
 
 def create_solutions_graph(m, min, max):
@@ -105,12 +116,12 @@ def create_solutions_graph(m, min, max):
     r1 = [ x for x in range(min, max)]
     r2 = [x + bar_width for x in r1]
     
+    
     plt.figure(figsize=(15,7))
 
     # plotting a bar chart
-    print(m.greedy_results)
-    plt.bar(r1, m.approx_counts,  width = bar_width, color = '#6A5ACD', tick_label="Approx Min Vertex Cover")
-    plt.bar(r2, m.greedy_counts,  width = bar_width, color = '#6495ED', tick_label="Greedy Algorithm")
+    plt.bar(r1, m.approx_counts,  width = bar_width, color = '#054A91', tick_label="Approx Min Vertex Cover")
+    plt.bar(r2, m.greedy_counts,  width = bar_width, color = '#3E7CB1', tick_label="Greedy Algorithm")
     # naming the x-axis
     plt.xlabel('n Vertexs')
     plt.xticks([r + bar_width for r in range(min, max)],[str(r) for r in range(min, max)])
@@ -121,23 +132,22 @@ def create_solutions_graph(m, min, max):
     
     # function to show the plot
     plt.legend(('Approx Min Vertex Cover','Greedy Algorithm'))
-    plt.show()
+    plt.savefig("content/solutions_graphics.png")
+    #plt.show()
     plt.close()
 
 def create_solutions_graph_same_mode(m, repeat, vertexs):
     # x-coordinates of left sides of bars
     bar_width = 0.3
-    print(vertexs)
-    print(repeat)
+
     r1 = [ x for x in range(repeat)]
     r2 = [x + bar_width for x in r1]
     
     plt.figure(figsize=(15,7))
 
     # plotting a bar chart
-    print(m.greedy_results)
-    plt.bar(r1, m.approx_counts,  width = bar_width, color = '#6A5ACD', tick_label="Approx Min Vertex Cover")
-    plt.bar(r2, m.greedy_counts,  width = bar_width, color = '#6495ED', tick_label="Greedy Algorithm")
+    plt.bar(r1, m.approx_counts,  width = bar_width, color = '#054A91', tick_label="Approx Min Vertex Cover")
+    plt.bar(r2, m.greedy_counts,  width = bar_width, color = '#3E7CB1', tick_label="Greedy Algorithm")
     # naming the x-axis
     plt.xlabel('Graph')
     plt.xticks([r + bar_width for r in range(repeat)],[str(r) for r in range(repeat)])
@@ -148,15 +158,18 @@ def create_solutions_graph_same_mode(m, repeat, vertexs):
     
     # function to show the plot
     plt.legend(('Approx Min Vertex Cover','Greedy Algorithm'))
-    plt.show()
+    plt.savefig("content/solutions_graphics.png")
+    #plt.show()
     plt.close()
 
 def write_solutions(file_path, values):
+    """write solutions on txt file"""
     with open(file_path, "w") as output_file:
         for row in values.keys():
             print(str(row) + " : " + str(values[row]), file=output_file)
 
 def same(nvertexs, ngraphs):
+    """Same Mode """
     approx = []
     vertexs = []
     greedy = []
@@ -174,25 +187,29 @@ def same(nvertexs, ngraphs):
     
     print("\n")
 
-    print("All Results:")
+    print("All final results:")
     print("\tGreedy Algorithm")
-    print("\t" + str(m.greedy_results))
-    
+    for i in m.greedy_results:
+        print("\t" + str(i) + " : " + str(m.greedy_results[i]))
+    print("")
     print("\tAprox Algorithm")
-    print("\t" + str(m.approx_results))
+    for i in m.approx_results:
+        print("\t" + str(i) + " : " + str(m.approx_results[i]))
+    print("")
+
 
     write_solutions("content/greedy_solutions.txt", m.greedy_results)
     write_solutions("content/aprox_solutions.txt", m.approx_results)
+  
 
-    #create_times_graph(m, min_vertexs, max_vertexs)
     create_solutions_graph_same_mode(m, repeat=ngraphs, vertexs=nvertexs)
 
 def increase(min, max):
+    """Increase mode"""
 
     approx = []
     vertexs = []
     greedy = []
-   
 
     min_vertexs = min
     max_vertexs = max
@@ -200,28 +217,30 @@ def increase(min, max):
     clean = True
     #Create x graphs with x vertexs
     for nvertexs in range(min_vertexs, max_vertexs):
-   
         #generate random graph
         graph = random_graph(nvertexs)
-     
         while graph == []:
             graph = random_graph(nvertexs)
-
-
         process(m, nvertexs , graph, approx, vertexs, greedy, clean=clean)
         clean = False
     
     print("\n")
 
-    print("All Results:")
-    print("\tGreedy Algorithm")
-    print("\t" + str(m.greedy_results))
     
+    print("All final results:")
+    print("\tGreedy Algorithm")
+    for i in m.greedy_results:
+        print("\t" + str(i) + " : " + str(m.greedy_results[i]))
+    print("")
     print("\tAprox Algorithm")
-    print("\t" + str(m.approx_results))
+    for i in m.approx_results:
+        print("\t" + str(i) + " : " + str(m.approx_results[i]))
+    print("")
+    
 
     write_solutions("content/greedy_solutions.txt", m.greedy_results)
     write_solutions("content/aprox_solutions.txt", m.approx_results)
+
 
     create_times_graph(m, min_vertexs, max_vertexs)
     create_solutions_graph(m, min_vertexs, max_vertexs)
