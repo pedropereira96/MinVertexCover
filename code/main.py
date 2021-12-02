@@ -141,9 +141,10 @@ def create_solutions_graph(m, min, max):
 def create_solutions_graph_same_mode(m, repeat, vertexs):
     # x-coordinates of left sides of bars
     bar_width = 0.3
-
-    r1 = [ x for x in range(repeat)]
+    prob = ["25% edges", "50% edges", "75% edges"]
+    r1 = [ x for x in range(repeat * 3)]
     r2 = [x + bar_width for x in r1]
+
     
     plt.figure(figsize=(15,7))
 
@@ -152,7 +153,7 @@ def create_solutions_graph_same_mode(m, repeat, vertexs):
     plt.bar(r2, m.greedy_counts,  width = bar_width, color = '#3E7CB1', tick_label="Greedy Algorithm")
     # naming the x-axis
     plt.xlabel('Graph')
-    plt.xticks([r + bar_width for r in range(repeat)],[str(r) for r in range(repeat)])
+    plt.xticks([r + bar_width for r in range(repeat * 3)],[str(r) + "-" + str(p) for r in range(repeat) for p in prob])
     # naming the y-axis
     plt.ylabel('Solutions')
     # plot title
@@ -207,6 +208,8 @@ def same(nvertexs, ngraphs):
     write_solutions("content/greedy_solutions.txt", m.greedy_results)
     write_solutions("content/aprox_solutions.txt", m.approx_results)
   
+    print(m.approx_counts)
+    print(m.greedy_counts)
 
     create_solutions_graph_same_mode(m, repeat=ngraphs, vertexs=nvertexs)
 
