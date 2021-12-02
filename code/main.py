@@ -22,14 +22,14 @@ class Main:
 
 
 
-def random_graph(vertices_number: int) :
+def random_graph(vertices_number: int, prob:float) :
     graph=[]
 
     # for each couple of nodes, add an edge from u to v
     # if the number randomly generated is greater than probability probability
     for i in range(vertices_number):
         for j in range(i + 1, vertices_number):
-            if random.random() < 0.5:
+            if random.random() < prob:
                 graph.append((i,j))
     return graph
 
@@ -53,6 +53,8 @@ def process(m, nvertexs, graph,  approx, vertexs, greedy,  clean, extra_name="" 
 
     print("Edges:")
     G.print_graph(True)
+
+    print("Amount of edges: " + str(len(G.graph)))
     print()
 
 
@@ -174,16 +176,20 @@ def same(nvertexs, ngraphs):
     vertexs = []
     greedy = []
     clean = True
+    probs = [0.25, 0.5, 0.75]
+
     m = Main()
     #Create x graphs with x vertexs
     for n in range(ngraphs):
-        #generate random graph
-        graph = random_graph(nvertexs)
-        extra_name = "."+str(n)
-        while graph == []:
-            graph = random_graph(nvertexs)
-        process(m, nvertexs , graph, approx, vertexs, greedy, extra_name=extra_name, clean=clean)
-        clean=False
+        for prob in probs:
+            #generate random graph
+            graph = random_graph(nvertexs, prob)
+
+            extra_name = "." + str(n) + "." + str(prob)[2:]
+            while graph == []:
+                graph = random_graph(nvertexs, prob)
+            process(m, nvertexs , graph, approx, vertexs, greedy, extra_name=extra_name, clean=clean)
+            clean=False
     
     print("\n")
 
@@ -210,6 +216,7 @@ def increase(min, max):
     approx = []
     vertexs = []
     greedy = []
+    prob = 0.5
 
     min_vertexs = min
     max_vertexs = max
@@ -217,13 +224,14 @@ def increase(min, max):
     clean = True
     #Create x graphs with x vertexs
     for nvertexs in range(min_vertexs, max_vertexs):
+        
         #generate random graph
-        graph = random_graph(nvertexs)
+        graph = random_graph(nvertexs, prob)
         while graph == []:
-            graph = random_graph(nvertexs)
-        process(m, nvertexs , graph, approx, vertexs, greedy, clean=clean)
+            graph = random_graph(nvertexs, prob)
+        process(m, nvertexs , graph, approx, vertexs, greedy, clean=clean )
         clean = False
-    
+        
     print("\n")
 
     
